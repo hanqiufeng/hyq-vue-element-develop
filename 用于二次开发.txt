@@ -1,1 +1,9 @@
-﻿
+﻿添加用户 
+D:\GIT\hyq-vue-element-develop\src\mock\login.js
+在 const userMap中添加新用户
+
+D:\GIT\hyq-vue-element-develop\src\utils\validate.js
+在 const valid_map中添加新用户
+
+权限管理
+当前权限管理全部由前端控制
