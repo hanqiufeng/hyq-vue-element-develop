@@ -38,105 +38,111 @@
         <span>{{$t('login.password')}} : {{$t('login.any')}}</span>
       </div>
 
-      <el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{$t('login.thirdparty')}}</el-button>
+      <!-- <el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{$t('login.thirdparty')}}</el-button> -->
+      <el-button class="thirdparty-button" type="primary" @click="showDialog=true">在新窗口打开</el-button>
     </el-form>
 
+    <!-- <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog" append-to-body> -->
     <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog" append-to-body>
       {{$t('login.thirdpartyTips')}}
       <br/>
       <br/>
       <br/>
-      <social-sign />
+      <el-button @click="openWindow('baidu')" type="success">在新窗口打开百度</el-button>
     </el-dialog>
 
   </div>
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
-import LangSelect from '@/components/LangSelect'
-import SocialSign from './socialsignin'
+import { isvalidUsername } from "@/utils/validate";
+import LangSelect from "@/components/LangSelect";
+import openWindow from "@/utils/openWindow";
 
 export default {
-  components: { LangSelect, SocialSign },
-  name: 'login',
+  components: { LangSelect },
+  name: "login",
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!isvalidUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error("Please enter the correct user name"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error("The password can not be less than 6 digits"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       loginForm: {
-        username: 'admin',
-        password: 'adminadmin'
+        username: "admin",
+        password: "adminadmin"
       },
       loginRules: {
         username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
+          { required: true, trigger: "blur", validator: validateUsername }
         ],
         password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
+          { required: true, trigger: "blur", validator: validatePassword }
         ]
       },
-      passwordType: 'password',
+      passwordType: "password",
       loading: false,
       showDialog: false
-    }
+    };
   },
   methods: {
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
+      if (this.passwordType === "password") {
+        this.passwordType = "";
       } else {
-        this.passwordType = 'password'
+        this.passwordType = "password";
       }
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           this.$store
-            .dispatch('LoginByUsername', this.loginForm)
+            .dispatch("LoginByUsername", this.loginForm)
             .then(() => {
-              this.loading = false
-              this.$router.push({ path: '/' })
+              this.loading = false;
+              this.$router.push({ path: "/" });
             })
             .catch(() => {
-              this.loading = false
-            })
+              this.loading = false;
+            });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     afterQRScan() {
-      const hash = window.location.hash.slice(1)
-      const hashObj = getQueryObject(hash)
-      const originUrl = window.location.origin
-      history.replaceState({}, '', originUrl)
+      const hash = window.location.hash.slice(1);
+      const hashObj = getQueryObject(hash);
+      const originUrl = window.location.origin;
+      history.replaceState({}, "", originUrl);
       const codeMap = {
-        wechat: 'code',
-        tencent: 'code'
-      }
-      const codeName = hashObj[codeMap[this.auth_type]]
+        wechat: "code",
+        tencent: "code"
+      };
+      const codeName = hashObj[codeMap[this.auth_type]];
       if (!codeName) {
-        alert('第三方登录失败')
+        alert("第三方登录失败");
       } else {
-        this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-          this.$router.push({ path: '/' })
-        })
+        this.$store.dispatch("LoginByThirdparty", codeName).then(() => {
+          this.$router.push({ path: "/" });
+        });
       }
+    },
+    openWindow(thirdpart) {
+      const url = "https://www.baidu.com";
+      openWindow(url, thirdpart, 540, 540);
     }
   },
   created() {
@@ -145,7 +151,7 @@ export default {
   destroyed() {
     // window.removeEventListener('hashchange', this.afterQRScan)
   }
-}
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
