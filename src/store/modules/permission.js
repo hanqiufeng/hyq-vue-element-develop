@@ -1,9 +1,11 @@
 import { asyncRouterMap, constantRouterMap } from "@/router";
 
+// <!-- 动态获取权限 -->
 /* Layout */
 // import Layout from "@/views/layout/Layout";
 // import power from "@/api/power"; // 动态获取用户权限
 // const _import = require("@/router/_import_development");
+// <!-- 动态获取权限 end -->
 
 /**
  * 通过meta.role判断是否与当前用户权限匹配
@@ -59,7 +61,7 @@ const permission = {
           accessedRouters = filterAsyncRouter(asyncRouterMap, roles);
         }
 
-        // 动态获取权限
+        // <!-- 动态获取权限 -->
         // var accessedRouters = [];
         // var menu_data = power.data_01;
         // // var menu_data = [];
@@ -98,6 +100,7 @@ const permission = {
         //     accessedRouters.push(ca);
         //   }
         // }
+        // <!-- 动态获取权限 end -->
 
         commit("SET_ROUTERS", accessedRouters);
         resolve();
